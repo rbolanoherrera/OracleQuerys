@@ -1,0 +1,40 @@
+declare
+ fechaMax date;
+ fechaMin date;
+ 
+ cursor MyCurs
+ (
+    idtFechaMin date,
+    idtFechaMax date
+ ) is 
+  WITH X AS (
+   SELECT ADD_MONTHS(idtFechaMin, LEVEL - 1) as mes, rownum as ponderacion
+   FROM DUAL
+   CONNECT BY LEVEL <= MONTHS_BETWEEN(ADD_MONTHS(idtFechaMax,1), idtFechaMin)
+   order by mes desc
+  ),
+  Y as 
+  (
+    select to_date(Y.periodo,'YYYY-MM') fecha, Y.* 
+    from Tabla_Data
+  )
+  select x.*, nvl(Y.Salario, 0) as valor 
+  from x, y
+  where  fecha(+) =  x.mes order by x.mes desc;
+
+begin
+
+ select max(to_date(periodo, 'YYYY-MM')) into fechaMax from Tabla_data;
+ select ADD_MONTHS(fechaMax, - 5) into fechaMin from dual;
+
+ --open MyCurs(fechaMin,fechaMax);
+ 
+ for v_reg in MyCurs(fechaMin,fechaMax) loop
+    DBMS_OUTPUT.PUT_LINE(v_reg.mes||' - '||v_reg.ponderacion||' - '||v_reg.valor);
+ end loop;
+ 
+ DBMS_OUTPUT.PUT_LINE('fechaMax: '||fechaMax);
+ DBMS_OUTPUT.PUT_LINE('fechaMin: '||fechaMin);  
+  
+
+end;
