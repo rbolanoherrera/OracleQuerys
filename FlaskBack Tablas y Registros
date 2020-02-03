@@ -1,0 +1,10 @@
+--Recuperar ultima version de la tabla hasta antes de ser borrada
+FLASHBACK TABLE CG_OPERACION_FUN_AGREGADA TO BEFORE DROP;
+
+--recupera resgistros de la tabla hasta la fecha especificada y los inserta en la misma tabla recuperada
+insert into CG_OPERACION_FUN_AGREGADA
+SELECT * FROM CG_OPERACION_FUN_AGREGADA
+  AS OF TIMESTAMP
+   TO_TIMESTAMP('2020-02-03 10:00:00', 'YYYY-MM-DD HH:MI:SS')
+     --WHERE last_name = 'Chung'
+     ;
