@@ -1,0 +1,17 @@
+DECLARE
+
+variasdfasdf varchar2(32) := '234';
+
+variab NUMBER;
+
+cuRef SYS_REFCURSOR;
+
+BEGIN
+
+       OPEN cuRef FOR 'select '||variasdfasdf||' as prueba from dual';
+
+       --fetch cuRef INTO variab;
+       --CLOSE cuRef;
+       --dbms_output.put_line('variab:'||variab);
+
+END;
